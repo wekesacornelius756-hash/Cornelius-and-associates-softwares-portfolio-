@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Cornelius &amp; Associates Softwares </title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+<style>
+  :root{--primary:#0b3d91;--primary-dark:#082b68;--accent:#1d4ed8;--bg:#f5f8ff;--bg-alt:#eaf1ff;--text:#0f172a;--muted:#64748b;--border:#dbe4f0;--radius:14px;--font:'Inter',system-ui,sans-serif}
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%}
+  body{font-family:var(--font);color:var(--text);background:var(--bg);min-height:100vh;display:flex;flex-direction:column}
+  #wrap{flex:1 0 auto;display:flex;flex-direction:column;min-height:100vh}
+  main{flex:1 0 auto}
+  footer{flex-shrink:0}
+  a{color:inherit;text-decoration:none}
+  button{font-family:inherit;cursor:pointer;border:none;background:none}
+  input{font-family:inherit}
+
+  #loader{position:fixed;inset:0;background:linear-gradient(135deg,#0b3d91,#1d4ed8);display:flex;align-items:center;justify-content:center;z-index:9999;transition:opacity .5s,visibility .5s}
+  #loader.hidden{opacity:0;visibility:hidden}
+  .spinner{width:54px;height:54px;border:4px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:spin 1s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  header{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+  .header-inner{max-width:1200px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;cursor:pointer}
+  .brand-logo{width:44px;height:44px;border-radius:10px;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;overflow:hidden;flex-shrink:0}
+  .brand-logo img{width:100%;height:100%;object-fit:cover}
+  .brand-name{font-size:1.1rem;font-weight:700;color:var(--primary);line-height:1.1}
+  .brand-tag{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+  nav{display:flex;gap:6px;flex-wrap:wrap}
+  nav a{padding:9px 15px;border-radius:50px;font-weight:500;font-size:.92rem;display:inline-flex;align-items:center;gap:6px;transition:all .15s}
+  nav a:hover{background:var(--bg-alt);color:var(--primary)}
+  nav a.active{background:var(--primary);color:#fff}
+
+  .container{max-width:1200px;margin:0 auto;padding:0 24px;width:100%}
+  .view{display:none;padding:40px 0 56px}
+  .view.active{display:block}
+
+  .hero{background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;border-radius:20px;padding:56px 32px;text-align:center;margin-bottom:48px}
+  .hero h1{font-size:2.5rem;font-weight:800;margin-bottom:14px;letter-spacing:-1px}
+  .hero p{font-size:1.1rem;opacity:.92;max-width:680px;margin:0 auto 28px}
+  .hero-cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:50px;font-weight:600;font-size:.92rem;transition:all .15s}
+  .btn-primary{background:var(--primary);color:#fff}
+  .btn-primary:hover{background:var(--primary-dark)}
+  .btn-light{background:#fff;color:var(--primary)}
+  .btn-outline{background:transparent;color:#fff;border:2px solid rgba(255,255,255,.6)}
+  .btn-outline:hover{background:#fff;color:var(--primary)}
+
+  .section-title{font-size:1.7rem;font-weight:700;color:var(--primary);margin-bottom:24px;display:flex;align-items:center;gap:10px}
+
+  .grid{display:grid;gap:22px}
+  .grid-svc{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+  .grid-proj{grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
+
+  .card{background:#fff;border-radius:var(--radius);padding:24px;border:1px solid var(--border);transition:transform .2s,box-shadow .2s}
+  .card:hover{transform:translateY(-4px);box-shadow:0 12px 28px rgba(11,61,145,.1)}
+  .card i{font-size:1.7rem;color:var(--accent);margin-bottom:14px;display:block}
+  .card h3{font-size:1.1rem;margin-bottom:8px;color:var(--primary)}
+  .card p{color:var(--muted);font-size:.92rem}
+
+  .about{background:#fff;border-radius:var(--radius);padding:32px;border:1px solid var(--border);font-size:1rem;line-height:1.7;color:#334155}
+
+  .project-card{background:#fff;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border);display:flex;flex-direction:column;transition:transform .2s}
+  .project-card:hover{transform:translateY(-4px)}
+  .project-thumb{height:180px;background:var(--bg-alt);display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:2.2rem;background-size:cover;background-position:center}
+  .project-body{padding:20px;flex:1;display:flex;flex-direction:column}
+  .project-cat{display:inline-block;background:var(--bg-alt);color:var(--primary);font-size:.72rem;font-weight:600;padding:3px 10px;border-radius:50px;margin-bottom:8px;text-transform:uppercase;letter-spacing:.3px;align-self:flex-start}
+  .project-body h3{font-size:1.15rem;color:var(--primary);margin-bottom:8px}
+  .project-desc{color:var(--muted);font-size:.9rem;margin-bottom:12px;flex:1}
+  .feats{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px}
+  .feat{background:#eef4ff;color:var(--accent);font-size:.72rem;font-weight:600;padding:3px 9px;border-radius:50px}
+  .actions{display:flex;gap:8px;flex-wrap:wrap}
+  .actions a,.actions button{display:inline-flex;align-items:center;gap:5px;font-weight:600;font-size:.85rem;padding:7px 13px;border-radius:8px;cursor:pointer}
+  .link-primary{background:var(--primary);color:#fff}
+  .link-primary:hover{background:var(--primary-dark)}
+  .link-alt{background:var(--bg-alt);color:var(--primary)}
+  .link-alt:hover{background:#dbe7ff}
+
+  .search-wrap{display:flex;align-items:center;background:#fff;border:1px solid var(--border);border-radius:50px;padding:6px 18px;margin-bottom:20px;max-width:420px}
+  .search-wrap i{color:#94a3b8;margin-right:8px}
+  .search-wrap input{border:none;outline:none;flex:1;padding:10px 0;font-size:.92rem;background:transparent}
+  .filter-tags{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px}
+  .filter-tag{background:#fff;border:1px solid var(--border);padding:7px 16px;border-radius:50px;font-size:.82rem;font-weight:600;color:var(--muted);cursor:pointer;transition:all .15s}
+  .filter-tag.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+
+  footer{background:var(--primary-dark);color:#cbd5e1;padding:40px 0 20px;margin-top:auto}
+  .footer-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:28px;margin-bottom:28px}
+  .footer-col h4{color:#fff;font-size:.95rem;margin-bottom:14px}
+  .footer-col p,.footer-col a{font-size:.88rem;color:#cbd5e1;line-height:1.8;display:block}
+  .footer-col a i{width:18px;margin-right:6px;color:#93c5fd}
+  .footer-social{display:flex;gap:10px;margin-top:6px}
+  .footer-social a{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;color:#fff;font-size:1rem;transition:all .15s}
+  .footer-social a:hover{background:var(--accent)}
+  .footer-bottom{border-top:1px solid rgba(255,255,255,.1);padding-top:18px;text-align:center;font-size:.82rem;color:#94a3b8}
+
+  .empty{text-align:center;padding:40px;color:var(--muted);grid-column:1/-1}
+  .empty i{font-size:2.4rem;margin-bottom:12px;opacity:.4;display:block}
+
+  @media (max-width:640px){
+    .hero h1{font-size:1.7rem}.hero{padding:40px 20px}
+    .container{padding:0 16px}.header-inner{padding:12px 16px}
+  }
+  .hidden{display:none!important}
+</style>
+</head>
+<body>
+
+<div id="loader"><div class="spinner"></div></div>
+
+<header>
+  <div class="header-inner">
+    <div class="brand" onclick="location.hash='#/'">
+      <div class="brand-logo" id="brandLogo">CA</div>
+      <div>
+        <div class="brand-name" id="brandName">Cornelius &amp; Associates Softwares</div>
+        <div class="brand-tag">Professionalism</div>
+      </div>
+    </div>
+    <nav>
+      <a href="#/" data-route="home"><i class="fas fa-home"></i> Home</a>
+      <a href="#/portfolio" data-route="portfolio"><i class="fas fa-folder"></i>Projects</a>
+      <a href="#/contact" data-route="contact"><i class="fas fa-envelope"></i> Contact</a>
+    </nav>
+  </div>
+</header>
+
+<div id="wrap">
+  <main>
+    <section class="view active" id="view-home">
+      <div class="container">
+        <div class="hero">
+          <h1 id="heroHeading">Modern Software for Modern Business</h1>
+          <p id="heroSubtext">We design, build, and deliver high-quality applications.</p>
+          <div class="hero-cta">
+            <a href="#/portfolio" class="btn btn-light"><i class="fas fa-folder"></i> View Portfolio</a>
+            <a href="#/contact" class="btn btn-outline"><i class="fas fa-paper-plane"></i> Contact</a>
+          </div>
+        </div>
+        <h2 class="section-title"><i class="fas fa-cogs"></i> Services</h2>
+        <div class="grid grid-svc" id="servicesGrid"></div>
+        <h2 class="section-title" style="margin-top:48px"><i class="fas fa-info-circle"></i> About Us</h2>
+        <div class="about" id="aboutBox"></div>
+      </div>
+    </section>
+
+    <section class="view" id="view-portfolio">
+      <div class="container">
+        <h2 class="section-title"><i class="fas fa-folder"></i> Portfolio</h2>
+        <div class="search-wrap">
+          <i class="fas fa-search"></i>
+          <input type="text" id="searchInput" placeholder="Search projects..." />
+        </div>
+        <div class="filter-tags" id="filterTags"></div>
+        <div class="grid grid-proj" id="projectsGrid"></div>
+      </div>
+    </section>
+
+    <section class="view" id="view-contact">
+      <div class="container">
+        <h2 class="section-title"><i class="fas fa-headset"></i> Contact</h2>
+        <div class="grid grid-svc">
+          <a class="card" id="contactEmailCard" href="#"><i class="fas fa-envelope"></i><h3>Email</h3><p id="contactEmailText"></p></a>
+          <a class="card" id="contactPhoneCard" href="#"><i class="fas fa-phone"></i><h3>Call</h3><p id="contactPhoneText"></p></a>
+          <a class="card" id="contactWhatsappCard" href="#" target="_blank"><i class="fab fa-whatsapp"></i><h3>WhatsApp</h3><p id="contactWhatsappText">Chat with us</p></a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col"><h4 id="footerBrandName">Cornelius &amp; Associates</h4><p id="footerAbout">Building software that empowers modern businesses.</p></div>
+        <div class="footer-col"><h4>Quick Links</h4><a href="#/"><i class="fas fa-home"></i> Home</a><a href="#/portfolio"><i class="fas fa-folder"></i> Portfolio</a><a href="#/contact"><i class="fas fa-envelope"></i> Contact</a></div>
+        <div class="footer-col"><h4>Contact</h4><a id="footerEmailLink" href="#"><i class="fas fa-envelope"></i> <span id="footerEmail"></span></a><a id="footerPhoneLink" href="#"><i class="fas fa-phone"></i> <span id="footerPhone"></span></a><a id="footerWhatsappLink" href="#"><i class="fab fa-whatsapp"></i> WhatsApp</a></div>
+        <div class="footer-col"><h4>Follow Us</h4><div class="footer-social" id="footerSocial"></div></div>
+      </div>
+      <div class="footer-bottom"><span id="footerCopyright"></span></div>
+    </div>
+  </footer>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, doc, getDoc, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+/* ⚠️ SAME CONFIG AS admin.html */
+const firebaseConfig = {
+  apiKey: "AIzaSyDWIRnnToLpXjnP-UIOvtsWxO-Oo-pXqFg",
+  authDomain: "cornel1.firebaseapp.com",
+  projectId: "cornel1",
+  storageBucket: "cornel1.firebasestorage.app",
+  messagingSenderId: "851139384552",
+  appId: "1:851139384552:web:cdc7c25f914f4dae23a55d"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const DEFAULT_SITE = {
+  branding: { companyName: "Cornelius & Associates", logoUrl: "", primaryColor: "#0b3d91", accentColor: "#1d4ed8" },
+  content: { heroHeading: "Modern Software for Modern Business", heroSubtext: "We design, build, and deliver high-quality applications.", about: "Cornelius & Associates is a professional software development studio." },
+  contact: { email: "hello@corneliussoft.com", phone: "+1 (555) 123-4567", whatsapp: "15551234567", social: { tiktok: "", instagram: "", x: "", facebook: "" } },
+  services: [{ icon: "fas fa-code", title: "Web Development", description: "Custom web applications." }]
+};
+
+let state = { site: DEFAULT_SITE, projects: [], filter: "all", search: "" };
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, m => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+
+function shade(hex, p){
+  hex = hex.replace("#","");
+  if (hex.length===3) hex = hex.split("").map(c=>c+c).join("");
+  const n = parseInt(hex,16);
+  let r=(n>>16)+p, g=((n>>8)&0xFF)+p, b=(n&0xFF)+p;
+  r=Math.max(0,Math.min(255,r)); g=Math.max(0,Math.min(255,g)); b=Math.max(0,Math.min(255,b));
+  return "#"+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);
+}
+
+async function loadSite(){
+  try{
+    const snap = await getDoc(doc(db,"site","content"));
+    if (snap.exists()){
+      const d = snap.data();
+      state.site = {
+        branding: {...DEFAULT_SITE.branding, ...(d.branding||{})},
+        content: {...DEFAULT_SITE.content, ...(d.content||{})},
+        contact: {...DEFAULT_SITE.contact, ...(d.contact||{}), social: {...DEFAULT_SITE.contact.social, ...((d.contact&&d.contact.social)||{})}},
+        services: Array.isArray(d.services) ? d.services : DEFAULT_SITE.services
+      };
+    }
+  }catch(e){ console.warn(e); }
+  applySite();
+}
+
+async function loadProjects(){
+  let snap;
+  try{
+    snap = await getDocs(query(collection(db,"projects"), orderBy("createdAt","desc")));
+  }catch(e){
+    snap = await getDocs(collection(db,"projects"));
+  }
+  state.projects = snap.docs.map(d=>({id:d.id, ...d.data()}));
+  renderPortfolio();
+}
+
+function applySite(){
+  const b = state.site.branding, c = state.site.content, ct = state.site.contact;
+  document.title = b.companyName;
+  $("#brandName").textContent = b.companyName;
+  $("#footerBrandName").textContent = b.companyName;
+  if (b.logoUrl) $("#brandLogo").innerHTML = `<img src="${esc(b.logoUrl)}"/>`;
+  else $("#brandLogo").textContent = b.companyName.split(/\s+/).map(w=>w[0]).slice(0,2).join("").toUpperCase();
+
+  document.documentElement.style.setProperty("--primary", b.primaryColor);
+  document.documentElement.style.setProperty("--primary-dark", shade(b.primaryColor,-15));
+  document.documentElement.style.setProperty("--accent", b.accentColor);
+
+  $("#heroHeading").textContent = c.heroHeading;
+  $("#heroSubtext").textContent = c.heroSubtext;
+  $("#aboutBox").textContent = c.about;
+  $("#footerAbout").textContent = c.about.split(".")[0]+".";
+
+  $("#contactEmailText").textContent = ct.email;
+  $("#contactPhoneText").textContent = ct.phone;
+  $("#contactEmailCard").href = "mailto:"+ct.email;
+  $("#contactPhoneCard").href = "tel:"+ct.phone.replace(/[^\d+]/g,"");
+  $("#contactWhatsappCard").href = `https://wa.me/${ct.whatsapp.replace(/\D/g,"")}`;
+  $("#footerEmail").textContent = ct.email;
+  $("#footerPhone").textContent = ct.phone;
+  $("#footerEmailLink").href = "mailto:"+ct.email;
+  $("#footerPhoneLink").href = "tel:"+ct.phone.replace(/[^\d+]/g,"");
+  $("#footerWhatsappLink").href = `https://wa.me/${ct.whatsapp.replace(/\D/g,"")}`;
+
+  const social = ct.social||{};
+  const items = [
+    {url:social.tiktok, i:"fab fa-tiktok"},
+    {url:social.instagram, i:"fab fa-instagram"},
+    {url:social.x, i:"fab fa-x-twitter"},
+    {url:social.facebook, i:"fab fa-facebook-f"}
+  ];
+  $("#footerSocial").innerHTML = items.filter(x=>x.url&&x.url.trim()).map(x=>`<a href="${esc(x.url)}" target="_blank"><i class="${x.i}"></i></a>`).join("");
+
+  $("#footerCopyright").textContent = `© ${new Date().getFullYear()} ${b.companyName} Softwares - All rights reserved`;
+
+  $("#servicesGrid").innerHTML = state.site.services.map(s=>`
+    <div class="card"><i class="${esc(s.icon)}"></i><h3>${esc(s.title)}</h3><p>${esc(s.description)}</p></div>
+  `).join("");
+}
+
+function renderPortfolio(){
+  const grid = $("#projectsGrid");
+  const list = state.projects.filter(p=>{
+    const ms = !state.search || (p.name||"").toLowerCase().includes(state.search.toLowerCase()) || (p.description||"").toLowerCase().includes(state.search.toLowerCase());
+    const mf = state.filter==="all" || p.category===state.filter;
+    return ms && mf;
+  });
+
+  if (!list.length){
+    grid.innerHTML = `<div class="empty"><i class="fas fa-folder-open"></i><p>No projects yet.</p></div>`;
+  } else {
+    grid.innerHTML = list.map(p=>{
+      const thumb = p.imageData ? `background-image:url('${p.imageData}')` : "";
+      const feats = Array.isArray(p.features) ? p.features : [];
+      const showDl = p.approved && p.downloadData;
+      return `
+        <article class="project-card">
+          <div class="project-thumb" style="${thumb}">${!p.imageData?'<i class="fas fa-image"></i>':''}</div>
+          <div class="project-body">
+            ${p.category?`<span class="project-cat">${esc(p.category)}</span>`:""}
+            <h3>${esc(p.name)}</h3>
+            <p class="project-desc">${esc(p.description)}</p>
+            ${feats.length?`<div class="feats">${feats.map(f=>`<span class="feat">${esc(f)}</span>`).join("")}</div>`:""}
+            <div class="actions">
+              ${p.liveUrl?`<a class="link-primary" href="${esc(p.liveUrl)}" target="_blank"><i class="fas fa-external-link-alt"></i> Live</a>`:""}
+              ${p.htmlData?`<button class="link-primary" data-html="${p.id}"><i class="fas fa-file-code"></i> View App</button>`:""}
+              ${showDl?`<a class="link-alt" href="${p.downloadData}" download="${esc(p.downloadName||'file')}"><i class="fas fa-download"></i> Download</a>`:""}
+            </div>
+          </div>
+        </article>`;
+    }).join("");
+
+    grid.querySelectorAll("[data-html]").forEach(b=>{
+      b.onclick = ()=>{
+        const p = state.projects.find(x=>x.id===b.dataset.html);
+        if (!p || !p.htmlData) return;
+        const parts = p.htmlData.split(",");
+        const html = parts[0].includes(";base64") ? decodeURIComponent(escape(atob(parts[1]))) : decodeURIComponent(parts[1]);
+        const blob = new Blob([html], {type:"text/html"});
+        const url = URL.createObjectURL(blob);
+        window.open(url, "_blank");
+        setTimeout(()=>URL.revokeObjectURL(url), 60000);
+      };
+    });
+  }
+
+  const cats = ["all", ...new Set(state.projects.map(p=>p.category).filter(Boolean))];
+  $("#filterTags").innerHTML = cats.map(c=>`<span class="filter-tag ${state.filter===c?"active":""}" data-f="${esc(c)}">${c==="all"?"All":esc(c)}</span>`).join("");
+  $("#filterTags").querySelectorAll(".filter-tag").forEach(el=>{
+    el.onclick = ()=>{ state.filter = el.dataset.f; renderPortfolio(); };
+  });
+}
+
+$("#searchInput").oninput = e=>{ state.search = e.target.value.trim(); renderPortfolio(); };
+
+function route(){
+  const r = (location.hash||"#/").replace("#/","").split("?")[0] || "home";
+  document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
+  const map = {home:"#view-home", portfolio:"#view-portfolio", contact:"#view-contact"};
+  (document.querySelector(map[r])||document.querySelector("#view-home")).classList.add("active");
+  document.querySelectorAll("nav a").forEach(a=>a.classList.toggle("active", a.dataset.route===r));
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+window.addEventListener("hashchange", route);
+
+async function init(){
+  const t = setTimeout(()=>$("#loader").classList.add("hidden"), 4000);
+  try{
+    await Promise.race([
+      (async()=>{ await loadSite(); await loadProjects(); })(),
+      new Promise((_,rej)=>setTimeout(()=>rej(new Error("timeout")), 3500))
+    ]);
+  }catch(e){
+    console.warn("Init slow:", e.message);
+    applySite(); renderPortfolio();
+  }
+  clearTimeout(t);
+  route();
+  $("#loader").classList.add("hidden");
+}
+init();
+</script>
+</body>
+</html>
